@@ -1,33 +1,3 @@
-Skip to content
-Search or jump to…
-Pull requests
-Issues
-Codespaces
-Marketplace
-Explore
- 
-@dev-mariana 
-souz-dev
-/
-template-nuxt
-Public
-Fork your own copy of souz-dev/template-nuxt
-Code
-Issues
-Pull requests
-Actions
-Projects
-Security
-Insights
-template-nuxt/.prettierignore
-@souz-dev
-souz-dev alloow
-Latest commit c99e228 yesterday
- History
- 1 contributor
-96 lines (68 sloc)  1.37 KB
-
-###
 # Place your Prettier ignore content here
 
 ###
@@ -123,18 +93,3 @@ sw.*
 
 # Vim swap files
 *.swp
-Footer
-© 2023 GitHub, Inc.
-Footer navigation
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
-template-nuxt/.prettierignore at main · souz-dev/template-nuxt
