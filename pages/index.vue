@@ -91,7 +91,6 @@
 <script setup></script>
 
 <style scoped>
-
 .container {
   padding: 5vh;
   background-color: #fff;
@@ -133,11 +132,11 @@ table {
 }
 
 thead {
-  background-color: #F7FAFC;
+  background-color: #f7fafc;
 }
 
 tbody {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 
 /* .table {
