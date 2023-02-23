@@ -46,26 +46,23 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="border border-slate-300">
-            <td class="text-center">Alfreds Futterkiste</td>
-            <td class="text-center">Maria Anders</td>
-            <td class="text-center">Germany</td>
-            <td class="text-center">Germany</td>
+          <tr class="border border-slate-300" v-for="item in transactions">
+            <td class="text-center">{{ item?.reference }}</td>
           </tr>
-          <tr class="border border-slate-300">
-            <td class="text-center">Centro comercial Moctezuma</td>
+          <tr class="border border-slate-300" v-for="item in categories">
+            <!-- <td class="text-center">{{ item?.name }}</td> -->
             <td class="text-center">Francisco Chang</td>
             <td class="text-center">Mexico</td>
             <td class="text-center">Mexico</td>
           </tr>
           <tr class="border border-slate-300">
-            <td class="text-center">Ernst Handel</td>
+            <!-- <td class="text-center" v-for="item in transactions">{{ item?.date }}</td> -->
             <td class="text-center">Roland Mendel</td>
             <td class="text-center">Austria</td>
             <td class="text-center">Austria</td>
           </tr>
           <tr class="border border-slate-300">
-            <td class="text-center">Island Trading</td>
+            <!-- <td class="text-center" v-for="item in transactions">{{ item?.amount }}</td> -->
             <td class="text-center">Helen Bennett</td>
             <td class="text-center">UK</td>
             <td class="text-center">UK</td>
@@ -86,9 +83,26 @@
       </table>
     </div>
   </div>
+  <!-- <div v-for="item in transactions">
+    {{ item?.reference }}
+  </div> -->
+  <div v-if="!transactions">
+    <h2>Ainda não há conteúdo para mostrar.</h2>
+  </div>
 </template>
 
-<script setup></script>
+<script lang="ts" setup>
+  import { state } from '../store/data'
+
+  const store = state()
+  const transactions = store.transactions;
+  const categories = store.categories;
+  const accounts = store.accounts;
+  console.log(transactions)
+  console.log(categories)
+  console.log(accounts)
+
+</script>
 
 <style scoped>
 .container {
