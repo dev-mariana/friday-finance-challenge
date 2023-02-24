@@ -5,7 +5,7 @@ import accounts from '../assets/data/accounts.json'
 import { State } from '~~/interfaces/state'
 import { Transaction } from '~~/interfaces/transaction'
 
-export const state = defineStore('data', {
+export const state = defineStore('state', {
     state: () => {
         return {
             transactions,

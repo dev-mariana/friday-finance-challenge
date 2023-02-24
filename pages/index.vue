@@ -46,45 +46,35 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="border border-slate-300" v-for="item in transactions">
-            <td class="text-center">{{ item?.reference }}</td>
-          </tr>
-          <tr class="border border-slate-300" v-for="item in categories">
-            <!-- <td class="text-center">{{ item?.name }}</td> -->
-            <td class="text-center">Francisco Chang</td>
-            <td class="text-center">Mexico</td>
-            <td class="text-center">Mexico</td>
-          </tr>
-          <tr class="border border-slate-300">
-            <!-- <td class="text-center" v-for="item in transactions">{{ item?.date }}</td> -->
-            <td class="text-center">Roland Mendel</td>
-            <td class="text-center">Austria</td>
-            <td class="text-center">Austria</td>
-          </tr>
-          <tr class="border border-slate-300">
-            <!-- <td class="text-center" v-for="item in transactions">{{ item?.amount }}</td> -->
-            <td class="text-center">Helen Bennett</td>
-            <td class="text-center">UK</td>
-            <td class="text-center">UK</td>
-          </tr>
-          <tr class="border border-slate-300">
-            <td class="text-center">Laughing Bacchus Winecellars</td>
-            <td class="text-center">Yoshi Tannamuri</td>
-            <td class="text-center">Canada</td>
-            <td class="text-center">Canada</td>
-          </tr>
-          <tr class="border border-slate-300">
-            <td class="text-center">Magazzini Alimentari Riuniti</td>
-            <td class="text-center">Giovanni Rovelli</td>
-            <td class="text-center">Italy</td>
-            <td class="text-center">Italy</td>
+          <tr class="border border-slate-300" v-for="item in transactionsLength">
+            <td class="text-center" v-if="item?.reference">{{ item?.reference }}</td>
+            <td class="text-center" v-if="!item?.reference">No Reference</td>
+            <div v-for="item in categoriesLength">
+              <td class="text-center">{{ item?.name }}</td>  
+              <td class="text-center" v-if="!item?.name">No Name</td>
+            </div>
+            <td class="text-center">{{ item?.date }}</td> 
+            <td class="text-center" v-if="!item?.date">No Date</td>
+            <td class="text-center">{{ item?.amount }}</td> 
+            <td class="text-center" v-if="!item?.amount">No Amount</td>
           </tr>
         </tbody>
       </table>
     </div>
-  </div>
+  </div> 
+  <div>
+    <button 
+      id="click"
+      @click="loadMore()" 
+      v-if="transactions.length != transactionsLength.length && categories.length != categoriesLength.length">
+        Load More
+    </button>
+    <!-- <button @click="previousPage()">Previous Page</button> -->
+  </div> 
   <!-- <div v-for="item in transactions">
     {{ item?.reference }}
+    {{ item?.amount }}
+    {{ item?.date }}
   </div> -->
   <div v-if="!transactions">
     <h2>Ainda não há conteúdo para mostrar.</h2>
@@ -92,16 +82,57 @@
 </template>
 
 <script lang="ts" setup>
-  import { state } from '../store/data'
+import { State } from '~~/interfaces/state'
+import { state } from '../store/data'
 
-  const store = state()
-  const transactions = store.transactions;
-  const categories = store.categories;
-  const accounts = store.accounts;
-  console.log(transactions)
-  console.log(categories)
-  console.log(accounts)
+const store = state()
+const transactions = store.transactions
+const categories = store.categories
+const accounts = store.accounts
+const pageAtual = 1
+const transactionsLength = transactions.slice((pageAtual - 1) * 20, pageAtual * 19)
+const categoriesLength = categories.slice((pageAtual - 1) * 20, pageAtual * 19)
 
+console.log(transactions)
+// console.log(categories)
+// console.log(accounts)
+
+function loadMore() {
+  if(transactions.length > 19 && categories.length > 19) {
+    
+
+    // console.log(transactionsLength, categoriesLength)
+
+    return { 
+      transactionsLength, categoriesLength
+    }
+  }
+}
+
+function nextPage() {
+  let nextPage: boolean
+  // (pageAtual - 1) * 20, pageAtual * 19  
+  for (let i = 0; i < transactions.length; i++) {
+    if (i < 19) {
+      nextPage = true
+      const result = transactions.slice((pageAtual - 1) * 20, pageAtual * 19)
+      i++
+      console.log(result)
+    }
+  }
+}
+
+function previousPage() {
+  let nextPage: boolean
+  for (let i = 0; i < transactions.length; i--) {
+    if (i > 19) {
+      nextPage = false
+      const result = transactions.slice(0, 19)
+      i--
+      console.log(result)
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -145,12 +176,43 @@ table {
   width: 100%;
 }
 
+#click {
+  background-color: #fb3c00;
+}
+
 thead {
   background-color: #f7fafc;
 }
 
 tbody {
   background-color: #ffffff;
+}
+
+#pagination {
+  display: block;
+  padding: 10px;
+  text-align: center;
+  background-color: #fb3c00;
+}
+
+#pagination > a {
+  display: inline-block;
+  text-decoration: none;
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-right: 0;
+  background: rgba(0, 0, 0, 0.08);
+  color: #000;
+  font-weight: 600;
+}
+
+#pagination > a:last-child {
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+#pagination > a:hover {
+  background: rgba(0, 0, 0, 0.03);
+  color: #fb3c00;
 }
 
 /* .table {
