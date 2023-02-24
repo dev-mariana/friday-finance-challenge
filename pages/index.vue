@@ -46,10 +46,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="border border-slate-300" v-for="item in transactionsLength">
+          <tr class="border border-slate-300" v-for="item in transactions">
             <td class="text-center" v-if="item?.reference">{{ item?.reference }}</td>
             <td class="text-center" v-if="!item?.reference">No Reference</td>
-            <div v-for="item in categoriesLength">
+            <div v-for="item in categories">
               <td class="text-center">{{ item?.name }}</td>  
               <td class="text-center" v-if="!item?.name">No Name</td>
             </div>
@@ -65,74 +65,20 @@
   <div>
     <button 
       id="click"
-      @click="loadMore()" 
-      v-if="transactions.length != transactionsLength.length && categories.length != categoriesLength.length">
+      @click="" >
         Load More
     </button>
     <!-- <button @click="previousPage()">Previous Page</button> -->
   </div> 
-  <!-- <div v-for="item in transactions">
-    {{ item?.reference }}
-    {{ item?.amount }}
-    {{ item?.date }}
-  </div> -->
-  <div v-if="!transactions">
-    <h2>Ainda não há conteúdo para mostrar.</h2>
-  </div>
 </template>
 
-<script lang="ts" setup>
-import { State } from '~~/interfaces/state'
-import { state } from '../store/data'
+<script setup>
+import { dataStore } from '../store/data'
 
-const store = state()
-const transactions = store.transactions
-const categories = store.categories
-const accounts = store.accounts
-const pageAtual = 1
-const transactionsLength = transactions.slice((pageAtual - 1) * 20, pageAtual * 19)
-const categoriesLength = categories.slice((pageAtual - 1) * 20, pageAtual * 19)
+const store = dataStore()
+const transactions = await store.getTransactions()
+const categories = await store.getCategories()
 
-console.log(transactions)
-// console.log(categories)
-// console.log(accounts)
-
-function loadMore() {
-  if(transactions.length > 19 && categories.length > 19) {
-    
-
-    // console.log(transactionsLength, categoriesLength)
-
-    return { 
-      transactionsLength, categoriesLength
-    }
-  }
-}
-
-function nextPage() {
-  let nextPage: boolean
-  // (pageAtual - 1) * 20, pageAtual * 19  
-  for (let i = 0; i < transactions.length; i++) {
-    if (i < 19) {
-      nextPage = true
-      const result = transactions.slice((pageAtual - 1) * 20, pageAtual * 19)
-      i++
-      console.log(result)
-    }
-  }
-}
-
-function previousPage() {
-  let nextPage: boolean
-  for (let i = 0; i < transactions.length; i--) {
-    if (i > 19) {
-      nextPage = false
-      const result = transactions.slice(0, 19)
-      i--
-      console.log(result)
-    }
-  }
-}
 </script>
 
 <style scoped>
