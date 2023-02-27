@@ -46,38 +46,90 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="border border-slate-300" v-for="item in transactions">
-            <td class="text-center" v-if="item?.reference">{{ item?.reference }}</td>
+          <tr
+            class="border border-slate-300"
+            v-for="(item, index) in transactions"
+            :key="index"
+          >
+            <td class="text-center" v-if="item?.reference">
+              {{ item?.reference }}
+            </td>
             <td class="text-center" v-if="!item?.reference">No Reference</td>
-            <div v-for="item in categories">
-              <td class="text-center">{{ item?.name }}</td>  
+            <div v-for="(item, index) in categories" :key="index">
+              <td class="text-center" v-if="item?.name">{{ item?.name }}</td>
               <td class="text-center" v-if="!item?.name">No Name</td>
             </div>
-            <td class="text-center">{{ item?.date }}</td> 
+            <td class="text-center" v-if="item?.date">{{ item?.date }}</td>
             <td class="text-center" v-if="!item?.date">No Date</td>
-            <td class="text-center">{{ item?.amount }}</td> 
+            <td class="text-center" v-if="!item?.amount">
+              {{ item?.amount }} {{ item?.currency }}
+            </td>
             <td class="text-center" v-if="!item?.amount">No Amount</td>
           </tr>
         </tbody>
       </table>
     </div>
-  </div> 
+  </div>
   <div>
-    <button 
-      id="click"
-      @click="" >
-        Load More
-    </button>
-    <!-- <button @click="previousPage()">Previous Page</button> -->
-  </div> 
+    <div>
+      <button :disabled="isFirstPage" @click="previousPage">Previous</button>
+      <span>Page {{ currentPage }} of {{ pageCount }}</span>
+      <button :disabled="isLastPage" @click="nextPage">Next</button>
+    </div>
+  </div>
 </template>
 
-<script setup>
+<script lang="ts">
+import { defineComponent, computed } from 'vue';
+import { Category } from '../interfaces/category';
+import { Transaction } from '../interfaces/transaction';
 import { dataStore } from '../store/data'
 
-const store = dataStore()
-const transactions = await store.getTransactions()
-const categories = await store.getCategories()
+export default defineComponent({
+  async setup() {
+    const store = dataStore()
+    const transactions: Transaction[] = await store.getTransactions()
+    const categories: Category[] = await store.getCategories()
+    // const testing = await store.teste(1, 20)
+
+    // const teste = items.map(item => item.reference)
+    // console.log(testing)
+
+    const paginatedItems = computed(() => {
+      // return items.slice(store.startIndex, store.endIndex)
+      // const categories = items2.slice(store.startIndex, store.endIndex)
+
+      // console.log(transactions, categories)
+    })
+
+    const paginatedItems2 = computed(() => {
+      // return items2.slice(store.startIndex, store.endIndex)
+    });
+
+    const isFirstPage = computed(() => store.currentPage === 1);
+    const isLastPage = computed(() => store.currentPage === Math.ceil(transactions.length / store.itemsPerPage));
+    const pageCount = computed(() => Math.ceil(transactions.length / store.itemsPerPage));
+
+    function previousPage() {
+      store.setPage(store.currentPage - 1);
+    }
+
+    function nextPage() {
+      store.setPage(store.currentPage + 1);
+    }
+
+    return {
+      paginatedItems,
+      paginatedItems2,
+      isFirstPage,
+      isLastPage,
+      currentPage: store.currentPage,
+      pageCount,
+      previousPage,
+      nextPage,
+    };
+  },
+});
 
 </script>
 

@@ -1,39 +1,51 @@
 import { defineStore } from 'pinia'
-import transactions from '../assets/data/transactions.json'
-import categories from '../assets/data/categories.json'
-import accounts from '../assets/data/accounts.json'
-import { State } from '~~/interfaces/state'
 import { Transaction } from '~~/interfaces/transaction'
-import axios from "axios";
+import axios from 'axios'
 import { Category } from '~~/interfaces/category'
 
 export const dataStore = defineStore('data', {
-    state: () => {
-        return {
-            transactions: [],
-            categories: [],
-        }
+  state: () => {
+    return {
+      currentPage: 1,
+      itemsPerPage: 10,
+      transactions: [],
+      categories: [],
+    }
+  },
+  getters: {
+    startIndex(state) {
+      return (state.currentPage - 1) * state.itemsPerPage
     },
-    actions: {
-        async getTransactions() {
-            try {
-                const response = await axios.get('http://localhost:8080/transactions?_page=1&_limit=19')
-                this.transactions = response.data
-                console.log(this.transactions)
-                return this.transactions 
-            } catch (error) {
-                console.log(error)
-            }
-        },
-        async getCategories(): Promise<Category[] | undefined> {
-            try {
-                const response = await axios.get('http://localhost:8080/categories?_page=1&_limit=19')
-                this.categories = response.data
-                console.log(this.categories)
-                return this.categories 
-            } catch (error) {
-                console.log(error)
-            }
-        }
+    endIndex(state) {
+      return state.currentPage * state.itemsPerPage
     },
+  },
+  actions: {
+    setPage(page: number) {
+      this.currentPage = page
+    },
+    setItemsPerPage(itemsPerPage: number) {
+      this.itemsPerPage = itemsPerPage
+    },
+    async getTransactions() {
+      try {
+        const response: Transaction[] = await axios.get('http://localhost:8080/transactions?')
+        this.transactions = response
+        // console.log(this.transactions)
+        return this.transactions
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async getCategories() {
+      try {
+        const response: Category[] = await axios.get('http://localhost:8080/categories')
+        this.categories = response
+        // console.log(this.categories)
+        return this.categories
+      } catch (error) {
+        console.log(error)
+      }
+    },
+  },
 })
