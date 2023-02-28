@@ -55,10 +55,15 @@
               {{ item?.reference }}
             </td>
             <td class="text-center" v-if="!item?.reference">No Reference</td>
-            <div v-for="(item, index) in categories" :key="index">
+            <div>
+              <category :categories="categories"></category>
+              <!-- <td class="text-center" v-if="item?.name">{{ item?.name }}</td>  -->
+              <!-- <td class="text-center">{{ categories?.name }}</td> -->
+            </div>
+            <!-- <div v-for="(item, index) in categories" :key="index" findCategory>
               <td class="text-center" v-if="item?.name">{{ item?.name }}</td>
               <td class="text-center" v-if="!item?.name">No Name</td>
-            </div>
+            </div> -->
             <td class="text-center" v-if="item?.date">{{ item?.date }}</td>
             <td class="text-center" v-if="!item?.date">No Date</td>
             <td class="text-center" v-if="!item?.amount">
@@ -84,27 +89,27 @@ import { defineComponent, computed } from 'vue';
 import { Category } from '../interfaces/category';
 import { Transaction } from '../interfaces/transaction';
 import { dataStore } from '../store/data'
+import category from '../components/category.vue';
 
 export default defineComponent({
   async setup() {
     const store = dataStore()
     const transactions: Transaction[] = await store.getTransactions()
     const categories: Category[] = await store.getCategories()
-    // const testing = await store.teste(1, 20)
+    // const { findCategory } = storeToRefs(store)
 
-    // const teste = items.map(item => item.reference)
-    // console.log(testing)
-
-    const paginatedItems = computed(() => {
-      // return items.slice(store.startIndex, store.endIndex)
-      // const categories = items2.slice(store.startIndex, store.endIndex)
-
-      // console.log(transactions, categories)
+    const findCategory = ((id: string) => {
+      const result = store.categories.find(category => category.id === id)
+      console.log(result)
     })
+  
+    // const paginatedItems = computed(() => {
+    //   return transactions.slice(store.startIndex, store.endIndex)
+    // })
 
-    const paginatedItems2 = computed(() => {
-      // return items2.slice(store.startIndex, store.endIndex)
-    });
+    // const paginatedItems2 = computed(() => {
+    //   return categories.slice(store.startIndex, store.endIndex)
+    // });
 
     const isFirstPage = computed(() => store.currentPage === 1);
     const isLastPage = computed(() => store.currentPage === Math.ceil(transactions.length / store.itemsPerPage));
@@ -119,16 +124,34 @@ export default defineComponent({
     }
 
     return {
-      paginatedItems,
-      paginatedItems2,
+      // paginatedItems,
+      // paginatedItems2,
       isFirstPage,
       isLastPage,
       currentPage: store.currentPage,
       pageCount,
       previousPage,
       nextPage,
+      transactions,
+      categories,
+      findCategory
     };
   },
+  components: {
+    category
+  },
+  props: {
+    categories: {
+      type: Object,
+      required: true,
+    }
+  },
+  data() {
+    const name = this.categories.name
+    return {
+      name: name
+    }
+  }
 });
 
 </script>

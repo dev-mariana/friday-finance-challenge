@@ -19,6 +19,12 @@ export const dataStore = defineStore('data', {
     endIndex(state) {
       return state.currentPage * state.itemsPerPage
     },
+    paginatedItems(state) {
+      return this.transactions.slice(state.currentPage, state.itemsPerPage)
+    },
+    findCategory(state) {
+      return ((id: string) => state.categories.find(category => category.id === id))
+    }
   },
   actions: {
     setPage(page: number) {
@@ -29,7 +35,7 @@ export const dataStore = defineStore('data', {
     },
     async getTransactions() {
       try {
-        const response: Transaction[] = await axios.get('http://localhost:8080/transactions?')
+        const response: Transaction[] = (await axios.get<Transaction[]>('http://localhost:8080/transactions?')).data
         this.transactions = response
         // console.log(this.transactions)
         return this.transactions
@@ -39,7 +45,7 @@ export const dataStore = defineStore('data', {
     },
     async getCategories() {
       try {
-        const response: Category[] = await axios.get('http://localhost:8080/categories')
+        const response: Category[] = (await axios.get<Category[]>('http://localhost:8080/categories')).data
         this.categories = response
         // console.log(this.categories)
         return this.categories
